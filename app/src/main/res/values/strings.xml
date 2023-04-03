@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">MVIExample</string>
+
+    <string name="test">test</string>
+    <string name="plus">plus</string>
+    <string name="minus">minus</string>
+</resources>
