@@ -38,9 +38,7 @@ class MainViewModel: BaseViewModel<MainState, MainEvent>() {
             onEvent(MainEvent.Loading)
             apiTest(true,
                 onSuccess = {
-                    viewModelScope.launch {
-                        onEvent(MainEvent.Increment)
-                    }
+                    onEvent(MainEvent.Increment)
                 },
                 onError = {
 
@@ -55,9 +53,7 @@ class MainViewModel: BaseViewModel<MainState, MainEvent>() {
             onEvent(MainEvent.Loading)
             apiTest(true,
                 onSuccess = {
-                    viewModelScope.launch {
-                        onEvent(MainEvent.Decrement)
-                    }
+                    onEvent(MainEvent.Decrement)
                 },
                 onError = {
 
@@ -67,11 +63,18 @@ class MainViewModel: BaseViewModel<MainState, MainEvent>() {
 
     fun onErrorEvent() {
         viewModelScope.launch {
-            onEvent(MainEvent.Error)
+            onEvent(MainEvent.Loading)
+            apiTest(false,
+                onSuccess = {
+
+                },
+                onError = {
+                    onEvent(MainEvent.Error)
+                })
         }
     }
 
-    private suspend fun apiTest(testFlag: Boolean, onSuccess: () -> Unit, onError: () -> Unit) {
+    private suspend fun apiTest(testFlag: Boolean, onSuccess: suspend () -> Unit, onError: suspend () -> Unit) {
         delay(AppConstants.DELAY)
         if(testFlag) {
             onSuccess()
