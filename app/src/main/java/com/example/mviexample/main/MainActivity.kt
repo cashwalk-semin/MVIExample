@@ -17,8 +17,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainState>(layoutId = R.l
             vm = viewModel
 
             semin.btnError.setOnClickListener {
-                semin.root.visibility = View.GONE
-                viewModel.onNormalEvent()
+                viewModel.onInitEvent()
             }
         }
     }
@@ -41,10 +40,12 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainState>(layoutId = R.l
                 MainEvent.Normal,
                 MainEvent.Increment,
                 MainEvent.Decrement -> {
+                    semin.root.visibility = View.GONE
                     pbLoading.visibility = View.GONE
                     tvTest.text = state.count.toString()
                 }
                 MainEvent.Loading -> {
+                    semin.root.visibility = View.GONE
                     pbLoading.visibility = View.VISIBLE
                 }
                 MainEvent.Error -> {

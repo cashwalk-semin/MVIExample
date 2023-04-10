@@ -12,13 +12,7 @@ class MainViewModel: BaseViewModel<MainState, MainEvent>() {
 
     override var currentEvent: MainEvent = MainEvent.Init
     override val events = Channel<MainEvent>()
-
     override val state = events.channelToStateFlow(MainState(), ::reduceState, viewModelScope)
-
-    override suspend fun onEvent(event: MainEvent) {
-        currentEvent = event
-        events.send(event)
-    }
 
     override fun reduceState(current: MainState, event: MainEvent): MainState {
         return when (event) {
@@ -28,6 +22,12 @@ class MainViewModel: BaseViewModel<MainState, MainEvent>() {
             is MainEvent.Increment -> current.copy(count = current.count.plus(1), event = event)
             is MainEvent.Decrement -> current.copy(count = current.count.minus(1), event = event)
             is MainEvent.Error -> current.copy(event = event)
+        }
+    }
+
+    fun onInitEvent() {
+        viewModelScope.launch {
+            onEvent(MainEvent.Normal)
         }
     }
 
@@ -68,12 +68,6 @@ class MainViewModel: BaseViewModel<MainState, MainEvent>() {
     fun onErrorEvent() {
         viewModelScope.launch {
             onEvent(MainEvent.Error)
-        }
-    }
-
-    fun onNormalEvent() {
-        viewModelScope.launch {
-            onEvent(MainEvent.Normal)
         }
     }
 

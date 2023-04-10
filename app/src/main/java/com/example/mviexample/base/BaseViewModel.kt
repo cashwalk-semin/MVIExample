@@ -9,6 +9,10 @@ abstract class BaseViewModel<State, Event>: ViewModel() {
     protected abstract val events: Channel<Event>
     abstract val state: StateFlow<State>
 
-    abstract suspend fun onEvent(event: Event)
+    protected suspend fun onEvent(event: Event) {
+        currentEvent = event
+        events.send(event)
+    }
+
     protected abstract fun reduceState(current: State, event: Event): State
 }
