@@ -9,17 +9,23 @@ import com.example.mviexample.databinding.ActivityMainBinding
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-class MainActivity(override val layoutId: Int = R.layout.activity_main) : BaseActivity<ActivityMainBinding, MainState>() {
+class MainActivity : BaseActivity<ActivityMainBinding, MainState>(layoutId = R.layout.activity_main) {
     private val viewModel = MainViewModel()
+
     override fun initView() {
-        binding.run {
+        bind {
             vm = viewModel
+
+            semin.btnError.setOnClickListener {
+                semin.root.visibility = View.GONE
+                viewModel.onNormalEvent()
+            }
         }
     }
 
-    override fun initObserver() {
-        lifecycleScope.launch(Dispatchers.Main) {
-            binding.run {
+    override fun initCollect() {
+        bind {
+            lifecycleScope.launch(Dispatchers.Main) {
                 viewModel.state.collect { state ->
                     Semin.messageLog("$state")
                     updateView(state)
@@ -29,9 +35,10 @@ class MainActivity(override val layoutId: Int = R.layout.activity_main) : BaseAc
     }
 
     override fun updateView(state: MainState) {
-        binding.run {
+        bind {
             when(state.event) {
                 MainEvent.Init,
+                MainEvent.Normal,
                 MainEvent.Increment,
                 MainEvent.Decrement -> {
                     pbLoading.visibility = View.GONE
@@ -41,7 +48,7 @@ class MainActivity(override val layoutId: Int = R.layout.activity_main) : BaseAc
                     pbLoading.visibility = View.VISIBLE
                 }
                 MainEvent.Error -> {
-
+                    semin.root.visibility = View.VISIBLE
                 }
             }
         }
