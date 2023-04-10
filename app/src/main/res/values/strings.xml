@@ -4,4 +4,8 @@
     <string name="test">test</string>
     <string name="plus">plus</string>
     <string name="minus">minus</string>
+    <string name="error">error</string>
+
+    <string name="kr_message_error">대충 에러라는 내용</string>
+    <string name="kr_confirm">확인</string>
 </resources>

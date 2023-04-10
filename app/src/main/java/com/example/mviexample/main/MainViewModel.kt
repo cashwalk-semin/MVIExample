@@ -23,6 +23,7 @@ class MainViewModel: BaseViewModel<MainState, MainEvent>() {
     override fun reduceState(current: MainState, event: MainEvent): MainState {
         return when (event) {
             is MainEvent.Init -> current.copy(event = event)
+            is MainEvent.Normal -> current.copy(event = event)
             is MainEvent.Loading -> current.copy(event = event)
             is MainEvent.Increment -> current.copy(count = current.count.plus(1), event = event)
             is MainEvent.Decrement -> current.copy(count = current.count.minus(1), event = event)
@@ -35,8 +36,15 @@ class MainViewModel: BaseViewModel<MainState, MainEvent>() {
 
         viewModelScope.launch {
             onEvent(MainEvent.Loading)
-            delay(AppConstants.DELAY)
-            onEvent(MainEvent.Increment)
+            apiTest(true,
+                onSuccess = {
+                    viewModelScope.launch {
+                        onEvent(MainEvent.Increment)
+                    }
+                },
+                onError = {
+
+                })
         }
     }
 
@@ -45,8 +53,37 @@ class MainViewModel: BaseViewModel<MainState, MainEvent>() {
 
         viewModelScope.launch {
             onEvent(MainEvent.Loading)
-            delay(AppConstants.DELAY)
-            onEvent(MainEvent.Decrement)
+            apiTest(true,
+                onSuccess = {
+                    viewModelScope.launch {
+                        onEvent(MainEvent.Decrement)
+                    }
+                },
+                onError = {
+
+                })
+        }
+    }
+
+    fun onErrorEvent() {
+        viewModelScope.launch {
+            onEvent(MainEvent.Error)
+        }
+    }
+
+    fun onNormalEvent() {
+        viewModelScope.launch {
+            onEvent(MainEvent.Normal)
+        }
+    }
+
+    private suspend fun apiTest(testFlag: Boolean, onSuccess: () -> Unit, onError: () -> Unit) {
+        delay(AppConstants.DELAY)
+        if(testFlag) {
+            onSuccess()
+        }
+        else {
+            onError()
         }
     }
 }

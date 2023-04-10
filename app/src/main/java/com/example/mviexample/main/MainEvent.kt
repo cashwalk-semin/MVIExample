@@ -2,6 +2,7 @@ package com.example.mviexample.main
 
 sealed class MainEvent {
     object Init : MainEvent()
+    object Normal : MainEvent()
     object Loading : MainEvent()
     object Increment : MainEvent()
     object Decrement : MainEvent()
