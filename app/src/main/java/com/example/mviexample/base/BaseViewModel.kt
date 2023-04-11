@@ -14,5 +14,5 @@ abstract class BaseViewModel<State, Event>: ViewModel() {
         events.send(event)
     }
 
-    protected abstract fun reduceState(current: State, event: Event): State
+    protected abstract fun changeState(current: State, event: Event): State
 }

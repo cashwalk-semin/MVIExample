@@ -12,9 +12,9 @@ class MainViewModel: BaseViewModel<MainState, MainEvent>() {
 
     override var currentEvent: MainEvent = MainEvent.Init
     override val events = Channel<MainEvent>()
-    override val state = events.channelToStateFlow(MainState(), ::reduceState, viewModelScope)
+    override val state = events.channelToStateFlow(MainState(), ::changeState, viewModelScope)
 
-    override fun reduceState(current: MainState, event: MainEvent): MainState {
+    override fun changeState(current: MainState, event: MainEvent): MainState {
         return when (event) {
             is MainEvent.Init -> current.copy(event = event)
             is MainEvent.Normal -> current.copy(event = event)
